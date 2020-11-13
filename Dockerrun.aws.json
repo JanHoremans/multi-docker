@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+     "name": "client",
+	 "image": "hrmnsj/multi-client",
+	 "hostname": "client",
+	 "essential": false
+    },
+	{
+	  "name": "server",
+	  "image": "hrmnsj/multi-server",
+	  "hostname": "api",
+	  "essential": false
+	},
+	{
+	  "name": "worker",
+	  "image": "hrmnsj/multi-worker",
+	  "hostname": "worker",
+	  "essential": false
+	},
+	{
+	  "name": "nginx",
+	  "image": "hrmnsj/multi-nginx",
+	  "hostname": "nginx",
+	  "essential": true,
+	  "portMappings": [
+	    { "hostPort": 80,
+		  "containerPort": 80
+		}
+	  ],
+	  "links": ["client", "server" ]
+	}
+  
+  ]
+}
