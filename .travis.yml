@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+  
+before_install:
+  - docker build -t hrmnsj/react-test -f ./client/Dockerfile.dev ./client
+  
+script:
+  - docker run -e CI=true hrmnsj/react-test npm test 
+  
+after_success:
+  - docker build -t hrmnsj/multi-client ./client
+  - docker build -t hrmnsj/multi-nginx  ./nginx
+  - docker build -t hrmnsj/multi-server ./server
+  - docker build -t hrmnsj/multi-worker ./worker
+# Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Take those images and push them to docker hub
+  - docker push hrmnsj/multi-client
+  - docker push hrmnsj/multi-nginx
+  - docker push hrmnsj/multi-server
+  - docker push hrmnsj/multi-worker
